@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Open Shelf | Library</title><link rel="stylesheet" href="css/style.css"></head>
+<body class="public-page">
+  <header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">OS</span><span>Open Shelf<small>COMMUNITY LIBRARY</small></span></a><nav><a href="books.html">Catalog</a><a href="login.html">Sign in</a><a class="button button-dark" href="register.html">Join the library</a></nav></header>
+  <main>
+    <section class="hero"><p class="eyebrow">A GOOD BOOK IS NEVER FAR AWAY</p><h1>Find your next<br><em>favorite chapter.</em></h1><p class="hero-copy">A neighborhood collection, ready when you are. Search the shelves, borrow a book, and keep your reading life in one place.</p><form id="hero-search" class="search-form"><label class="sr-only" for="hero-keyword">Search books</label><input id="hero-keyword" placeholder="Try a title, author, or subject"><button class="button button-accent" type="submit">Explore books <span aria-hidden="true">↗</span></button></form><div class="hero-note"><span class="live-dot"></span> Browse the live library catalog</div></section>
+    <section class="home-band"><div><span class="eyebrow">THE COLLECTION</span><h2>Room for every kind of reader.</h2></div><a class="text-link" href="books.html">Open the catalog <span aria-hidden="true">→</span></a></section>
+    <section id="featured-books" class="book-grid home-books" aria-live="polite"><p class="muted">Loading the collection...</p></section>
+  </main>
+  <footer class="site-footer"><span>Open Shelf Library</span><span>Read widely. Return on time.</span></footer>
+  <script src="js/api.js"></script><script>
+    document.querySelector('#hero-search').addEventListener('submit', event => { event.preventDefault(); location.href = `books.html?q=${encodeURIComponent(document.querySelector('#hero-keyword').value)}`; });
+    LibraryApi.request('/books').then(books => { document.querySelector('#featured-books').innerHTML = books.slice(0, 3).map(book => `<article class="book-tile"><span class="book-category">${LibraryApi.escape(book.category)}</span><h3>${LibraryApi.escape(book.title)}</h3><p>by ${LibraryApi.escape(book.author)}</p><span class="availability">${book.availableQuantity} available</span></article>`).join('') || '<p class="muted">The library is ready for its first titles.</p>'; }).catch(error => { document.querySelector('#featured-books').innerHTML = `<p class="error-text">${LibraryApi.escape(error.message)}. Start the backend and refresh this page.</p>`; });
+  </script>
+</body>
+</html>
